@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateFraseTable extends Migration
+class CreateSysConnectionTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,15 +13,12 @@ class CreateFraseTable extends Migration
      */
     public function up()
     {
-        Schema::create('frase', function (Blueprint $table) {
+        Schema::create('sys_connection', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->timestamps();
-
-            $table->string('texto');
-
-            $table->unsignedBigInteger('id_user');
-
-            $table->foreign('id_user')->references('id')->on('users')->onUpdate('cascade')->onDelete('no action');
+            $table->string('sys_key', 150);
+            $table->string('sys_secret', 150);
+            $table->string('sys_access_token', 150);
         });
     }
 
@@ -32,6 +29,6 @@ class CreateFraseTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('frase');
+        Schema::dropIfExists('sys_connection');
     }
 }

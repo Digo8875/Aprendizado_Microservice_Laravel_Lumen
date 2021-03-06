@@ -79,6 +79,7 @@ $app->middleware([
 
 $app->routeMiddleware([
     'auth' => App\Http\Middleware\Authenticate::class,
+    'sys_connection' => App\Http\Middleware\Sys_connectionMiddleware::class,
 ]);
 
 /*

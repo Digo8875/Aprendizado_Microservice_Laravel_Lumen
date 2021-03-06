@@ -27,7 +27,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
      * @var array
      */
     protected $hidden = [
-        'password', 'api_token',
+        'password', 'api_token', 'id_sys_connection',
     ];
 
     /**
@@ -36,5 +36,13 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     public function frases()
     {
         return $this->hasMany('App\Frase', 'id_user');
+    }
+
+    /**
+     * Get the Sys_connection that owns the User.
+     */
+    public function sys_connection()
+    {
+        return $this->belongsTo('App\Sys_connection', 'id_sys_connection');
     }
 }

@@ -25,3 +25,5 @@ Route::get('/teste_request', 'Microservice_testeController@teste_request')->name
 Route::get('/new_account_microservice_teste', 'Microservice_testeController@create_new_account')->name('new_account_microservice_teste');
 Route::get('/gerar_frase', 'Microservice_testeController@gerar_frase')->name('gerar_frase');
 Route::get('/get_user_frases', 'Microservice_testeController@get_user_frases')->name('get_user_frases');
+
+Route::resource('api_frase', 'Api_fraseController');

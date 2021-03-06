@@ -46,7 +46,7 @@
                     <div class="row justify-content-center">
                         <div class="col-12 d-flex justify-content-center align-items-center text-center mb-3">
                             <a class="btn btn-primary p-1" href="{{ route('gerar_frase') }}">
-                                {{ __('Gerar frase') }}
+                                {{ __('Gerar frase aleatoria') }}
                             </a>
                         </div>
                     </div>
@@ -55,6 +55,14 @@
                         <div class="col-12 d-flex justify-content-center align-items-center text-center mb-3">
                             <a class="btn btn-primary p-1" href="{{ route('get_user_frases') }}">
                                 {{ __('Visualizar minhas frases') }}
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="row justify-content-center">
+                        <div class="col-12 d-flex justify-content-center align-items-center text-center mb-3">
+                            <a class="btn btn-primary p-1" href="{{ route('api_frase.create') }}">
+                                {{ __('Crate Frase Manual') }}
                             </a>
                         </div>
                     </div>

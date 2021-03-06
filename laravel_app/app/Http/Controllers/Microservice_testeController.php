@@ -68,17 +68,19 @@ class Microservice_testeController extends Controller
             $response = $client->request('POST', $url, [
                 'headers' => [
                     'User-Agent' => 'microservice_teste/1.0',
-                    'Accept' => 'application/json'
+                    'Accept' => 'application/json',
+                    'Authorization' => 'Bearer '.env('SYS_ACCESS_TOKEN')
                 ]
             ]);
 
             $result = json_decode($response->getBody(), true);
 
+
             $user->microservice_token = $result['user_token'];
             $user->save();
 
             session()->flash('message', 'Ação efetuada com sucesso.');
-            session()->flash('message_type', 'danger');
+            session()->flash('message_type', 'success');
             return redirect()->route('home');
 
         }
@@ -111,8 +113,7 @@ class Microservice_testeController extends Controller
                     'headers' => [
                         'User-Agent' => 'microservice_teste/1.0',
                         'Accept' => 'application/json',
-                        'Authorization' => 'Bearer '.$user->microservice_token,
-                        'X-XSS-Protection' => '1; mode=block'
+                        'Authorization' => 'Bearer '.env('SYS_ACCESS_TOKEN'),
                     ],
                     'form_params' => [
                         'api_token' => $user->microservice_token
@@ -180,8 +181,8 @@ class Microservice_testeController extends Controller
                     'headers' => [
                         'User-Agent' => 'microservice_teste/1.0',
                         'Accept' => 'application/json',
-                        'Authorization' => 'Bearer '.$user->microservice_token,
-                        'X-XSS-Protection' => '1; mode=block'
+                        'Authorization' => 'Bearer '.env('SYS_ACCESS_TOKEN'),
+                        'JWT-Token' => $this->gerar_jwt(),
                     ],
                     'path' => request()->path(),
                     'query' => $query
@@ -222,5 +223,36 @@ class Microservice_testeController extends Controller
 
             dd('Primeiro você deve integrar com o microservice!');
         }
+    }
+
+    public function gerar_jwt(){
+
+        $jwt_header = [
+            'typ' => 'JWT',
+            'alg' => 'HS256'
+        ];
+        $jwt_payload = [
+            'access_token' => env('SYS_ACCESS_TOKEN')
+        ];
+
+        $jwt_key = env('SYS_KEY').':'.env('SYS_SECRET');
+
+        //JSON
+        $header = json_encode($jwt_header);
+        $payload = json_encode($jwt_payload);
+
+        //Base 64
+        $header = base64_encode($header);
+        $payload = base64_encode($payload);
+        $key = base64_encode($jwt_key);
+
+        //Sign
+        $sign = hash_hmac('sha256', $header . "." . $payload, $key, true);
+        $sign = base64_encode($sign);
+
+        //Token
+        $token = $header . '.' . $payload . '.' . $sign;
+
+        return $token;
     }
 }

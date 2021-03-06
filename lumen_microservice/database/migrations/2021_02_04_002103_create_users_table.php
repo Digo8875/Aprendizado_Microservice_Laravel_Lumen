@@ -14,10 +14,14 @@ class CreateUsersTable extends Migration
     public function up()
     {
         Schema::create('users', function (Blueprint $table) {
-            $table->id();
+            $table->bigIncrements('id');
             $table->timestamps();
 
-            $table->string('api_token', 80)->unique();
+            $table->string('api_token', 150);
+
+            $table->unsignedBigInteger('id_sys_connection');
+
+            $table->foreign('id_sys_connection')->references('id')->on('sys_connection')->onUpdate('cascade')->onDelete('no action');
         });
     }
 

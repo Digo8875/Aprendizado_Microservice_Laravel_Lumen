@@ -21,12 +21,16 @@ $router->get('/', function () use ($router) {
 
 $router->post('/teste_request', 'MainController@teste_request');
 
-$router->post('/new_user', 'MainController@new_user');
+//Routes para verificar o acesso ao sistema com token
+$router->group(['middleware' => 'sys_connection'], function () use ($router) {
+    
+    $router->post('/new_user', 'MainController@new_user');
 
-//Routes para User credenciado com o api_token
-$router->group(['prefix' => 'api/v1', 'middleware' => 'auth'], function () use ($router) {
+    //Routes para User credenciado com o api_token
+    $router->group(['prefix' => 'api/v1', 'middleware' => 'auth'], function () use ($router) {
 
-    $router->post('/gerar_frase', 'MainController@gerar_frase');
-    $router->get('/get_user_frases', 'MainController@get_user_frases');
-
+        $router->post('/gerar_frase', 'MainController@gerar_frase');
+        $router->get('/get_user_frases', 'MainController@get_user_frases');
+        $router->post('/frase', 'FraseController@store');
+    });
 });

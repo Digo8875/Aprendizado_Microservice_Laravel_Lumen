@@ -7,6 +7,7 @@ use Illuminate\Support\Str;
 
 use App\User;
 use App\Frase;
+use App\Sys_connection;
 
 class MainController extends Controller
 {
@@ -35,17 +36,30 @@ class MainController extends Controller
             'request_all' => $request->all(),
             'request_input' => $request->input(),
             'request_query' => $request->query(),
-            'request_user' => $request->user
+            'request_user' => $request->user,
+            'sys_key' => strtoupper(md5(uniqid(rand(10, rand(10, 99999999)), true))),
+            'sys_secret' => strtoupper(md5(uniqid(rand(10, rand(10, 99999999)), true))),
+            'sys_access_token' => strtoupper(md5(uniqid(rand(10, rand(10, 99999999)), true)))
         ];
 
         return response()->json($response, 200);
     }
 
     public function new_user(Request $request){
-        
+
+        $sys_connection = Sys_connection::where('sys_access_token', '=', $request->bearerToken())->first();
+
         $user = new User;
 
-        $user->api_token = Str::random(80);
+        $new_api_token = null;
+        do{
+            $new_api_token = strtoupper(md5(uniqid(rand(10, rand(10, 99999999)), true)));
+            $has_user_api_token = User::where('api_token', '=', $new_api_token)->first();
+        }while(!is_null($has_user_api_token));
+
+        // $user->api_token = Str::random(80);
+        $user->api_token = $new_api_token;
+        $user->id_sys_connection = $sys_connection->id;
         $user->save();
 
         $response = [
