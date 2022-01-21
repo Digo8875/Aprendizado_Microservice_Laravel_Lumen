@@ -75,7 +75,7 @@ class Api_fraseController extends Controller
 
             }catch( RequestException  $erro){
                 report($erro);
-                
+
                 if($erro->getCode() == 0){
                     session()->flash('message', 'Sistema inacessível no momento.');
                     session()->flash('message_type', 'danger');

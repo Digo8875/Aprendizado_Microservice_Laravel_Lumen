@@ -18,7 +18,7 @@ class Sys_connectionMiddleware
     public function handle($request, Closure $next)
     {
         $sys_connection = Sys_connection::where('sys_access_token', '=', $request->bearerToken())->first();
-        
+
         if(is_null($sys_connection))
             return response('Unauthorized.', 401);
 
@@ -33,7 +33,7 @@ class Sys_connectionMiddleware
 
         if($access_token != $request->bearerToken())
             return response('Unauthorized.', 401);
-        
+
         $header = $token[0];
         $payload = $token[1];
         $sign = $token[2];

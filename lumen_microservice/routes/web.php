@@ -23,7 +23,7 @@ $router->post('/teste_request', 'MainController@teste_request');
 
 //Routes para verificar o acesso ao sistema com token
 $router->group(['middleware' => 'sys_connection'], function () use ($router) {
-    
+
     $router->post('/new_user', 'MainController@new_user');
 
     //Routes para User credenciado com o api_token

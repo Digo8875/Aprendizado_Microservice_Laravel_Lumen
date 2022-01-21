@@ -11,42 +11,46 @@ use GuzzleHttp\Exception\RequestException;
 class Microservice_testeController extends Controller
 {
 
-    public function teste_request(){
+    public function teste_request()
+    {
+        try{
+            $user = auth()->user();
 
-        $user = auth()->user();
+            $data = [
+                'dado1' => 'dados 1',
+                'dado2' => 7,
+                'user' => $user->toarray()
+            ];
 
-        $data = [
-            'dado1' => 'dados 1',
-            'dado2' => 7,
-            'user' => $user->toarray()
-        ];
+            $url = null;
 
-        $url = null;
+            if(app()->environment() == 'production'){
+                $url = "";
+            }
+            else{
+                $url = "localhost:9000/teste_request";
+            }
 
-        if(app()->environment() == 'production'){
-            $url = "";
+            $client = new \GuzzleHttp\Client();
+            $response = $client->request('POST', $url, [
+                'headers' => [
+                    'User-Agent' => 'microservice_teste/1.0',
+                    'Accept' => 'application/json',
+                    'Authorization' => 'Bearer YWxhZGRpbjpvcGVuc2VzYW1l'
+                ],
+                'form_params' => $data,
+                'query' => 'foo=bar'
+            ]);
+
+            $result = json_decode($response->getBody(), true);
+
+            // dd($response->getHeaders());
+            // dd($response->getStatusCode());
+            // dd($response->getReasonPhrase());
+            dd($result);
+        }catch(Exception $erro){
+            report($erro);
         }
-        else{
-            $url = "localhost:9000/teste_request";
-        }
-
-        $client = new \GuzzleHttp\Client();
-        $response = $client->request('POST', $url, [
-            'headers' => [
-                'User-Agent' => 'microservice_teste/1.0',
-                'Accept' => 'application/json',
-                'Authorization' => 'Bearer YWxhZGRpbjpvcGVuc2VzYW1l'
-            ],
-            'form_params' => $data,
-            'query' => 'foo=bar'
-        ]);
-
-        $result = json_decode($response->getBody(), true);
-
-        // dd($response->getHeaders());
-        // dd($response->getStatusCode());
-        // dd($response->getReasonPhrase());
-        dd($result);
     }
 
     public function create_new_account(){
@@ -114,6 +118,7 @@ class Microservice_testeController extends Controller
                         'User-Agent' => 'microservice_teste/1.0',
                         'Accept' => 'application/json',
                         'Authorization' => 'Bearer '.env('SYS_ACCESS_TOKEN'),
+                        'JWT-Token' => $this->gerar_jwt(),
                     ],
                     'form_params' => [
                         'api_token' => $user->microservice_token
