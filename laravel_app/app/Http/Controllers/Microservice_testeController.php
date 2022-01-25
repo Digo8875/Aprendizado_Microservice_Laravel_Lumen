@@ -73,7 +73,8 @@ class Microservice_testeController extends Controller
                 'headers' => [
                     'User-Agent' => 'microservice_teste/1.0',
                     'Accept' => 'application/json',
-                    'Authorization' => 'Bearer '.env('SYS_ACCESS_TOKEN')
+                    'Authorization' => 'Bearer '.env('SYS_ACCESS_TOKEN'),
+                    'JWT-Token' => $this->gerar_jwt(),
                 ]
             ]);
 
